@@ -1,10 +1,9 @@
-
 # coding: utf-8
 
 # # Stock photo description bot
-# 
+#
 # Uses microsoft's cognitive vision api: https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/
-# 
+#
 # To describe random stock photos from unsplash: https://source.unsplash.com/random
 
 # In[ ]:
@@ -50,7 +49,7 @@ while file_size > max_file_size:
     img_url = response.url
     ext = img_url[img_url.find('&fm=')+4 : img_url.find('&crop=')]
     img_filepath = 'img_temp.{}'.format(ext)
-    
+
     with open(img_filepath, 'wb') as handler:
         handler.write(img_data)
     file_size = os.path.getsize(img_filepath)
@@ -101,7 +100,3 @@ print(result.created_at, result.text)
 
 
 # In[ ]:
-
-
-
-

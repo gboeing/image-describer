@@ -1,4 +1,3 @@
-
 # coding: utf-8
 
 # In[ ]:
@@ -7,7 +6,7 @@
 import math, os, twitter, random, requests, time
 from keys import msft_cognitive_api_key, consumer_key, consumer_secret, access_token_key, access_token_secret, user_agent
 
-download_images = True
+download_images = False
 img_folder = 'img'
 screen_names = ['cursedimages', 'cursedimages_2']
 delay_filepath = 'delay.tmp'
@@ -39,13 +38,13 @@ print('logged into twitter as "{}" id="{}"'.format(user['screen_name'], user['id
 
 
 if download_images:
-    
+
     for screen_name in screen_names:
 
         max_count = 200 #twitter only lets you get 200 statuses at a time
         max_id = None
         statuses = []
-        
+
         # how many statuses has this user posted?
         user = api.GetUser(screen_name=screen_name)
         count = user.statuses_count
@@ -56,7 +55,7 @@ if download_images:
             batch = api.GetUserTimeline(screen_name=screen_name, count=max_count, max_id=max_id)
             statuses.extend(batch)
             max_id = batch[-1].id
-        
+
         # for each status, download and save the media
         for status in statuses:
             if status.media is not None:
@@ -105,7 +104,7 @@ description = response_data['description']['captions'][0]['text']
 
 screen_name, status_id, image_id = file.split('-')
 tweet_url = 'https://twitter.com/{}/status/{}'.format(screen_name, status_id)
-status = '{} {}'.format(description, tweet_url)
+status = '{}. {}'.format(description.capitalize(), tweet_url)
 print(status)
 
 
@@ -119,7 +118,3 @@ print(result.created_at, result.text)
 
 
 # In[ ]:
-
-
-
-

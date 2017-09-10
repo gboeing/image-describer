@@ -1,10 +1,9 @@
-
 # coding: utf-8
 
 # # City description bot
-# 
+#
 # Uses microsoft's cognitive vision api: https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/
-# 
+#
 # To describe popular photos of cities from reddit: https://www.reddit.com/r/cityporn/top
 
 # In[ ]:
@@ -17,7 +16,7 @@ from keys import msft_cognitive_api_key, consumer_key, consumer_secret, access_t
 # In[ ]:
 
 
-url = 'https://www.reddit.com/r/cityporn/top.json' #or https://source.unsplash.com/random
+url = 'https://www.reddit.com/r/cityporn/top.json'
 history_filepath = 'history.txt'
 delay_filepath = 'delay.tmp'
 
@@ -63,10 +62,10 @@ print(len(images))
 
 # only use images with valid file extensions
 def filter_url(url, extensions=['jpg','png']):
-    is_valid = False    
+    is_valid = False
     for ext in extensions:
         if url.endswith(ext):
-            is_valid = True           
+            is_valid = True
     return is_valid
 
 images = [image for image in images if filter_url(image['url'])]
@@ -165,7 +164,3 @@ with open(history_filepath, 'w') as f:
 
 
 # In[ ]:
-
-
-
-
