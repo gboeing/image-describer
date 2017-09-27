@@ -10,6 +10,7 @@
 
 
 import requests, json, twitter, os, time
+from PIL import Image
 from keys import msft_cognitive_api_key, consumer_key, consumer_secret, access_token_key, access_token_secret, user_agent
 
 
@@ -22,6 +23,7 @@ delay_filepath = 'delay.tmp'
 
 # twitter needs image files <3mb and microsoft needs <4mb
 max_file_size = 3e6 #3 megabytes in bytes
+max_dimensions = (1500, 1500) # if file exceeds max_file_size, resize to this max
 
 
 # In[ ]:
@@ -97,14 +99,28 @@ def download_img(url, img_filepath='img_temp.{}', mode='wb'):
     return img_filepath
 
 
-# In[ ]:
+def resize_img_file(img_filepath, max_dimensions):
+    original_image = Image.open(img_filepath)
+    img_format = original_image.format
+    img = original_image.copy()
+    img.thumbnail((max_dimensions[0], max_dimensions[1]), Image.LANCZOS)
+    img.format = img_format
+    img.save(img_filepath)
+    print('resized image file from {} to {}'.format(original_image.size, img.size))
+    return img
 
 
-# of the images that remain after filtering, grab the first that is smaller than max_file_size
+# of the images that remain after filtering, grab the first that is smaller
+# than max_file_size, or that we can resize to be small enough
 for image in images:
     img_filepath = download_img(image['url'])
     if os.path.getsize(img_filepath) < max_file_size:
-        break
+        break #if this image is small enough, break the loop and use it
+    else:
+        # if this image is too big, try to resize it then check it again
+        resize_img_file(img_filepath, max_dimensions)
+        if os.path.getsize(img_filepath) < max_file_size:
+            break #if this image is now small enough, break the loop and use it
 
 
 # ## Get image description from microsoft computer vision API
@@ -117,10 +133,10 @@ url = 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze'
 params = {'visualFeatures' : 'Description',
           'details' : 'Landmarks',
           'language' : 'en'}
-headers = {'Content-Type' : 'application/json',
+headers = {'Content-Type' : 'application/octet-stream',
            'Ocp-Apim-Subscription-Key' : msft_cognitive_api_key}
-data = json.dumps({'url':image['url']})
-response = requests.post(url, params=params, data=data, headers=headers)
+img_data = open(img_filepath, mode='rb').read()
+response = requests.post(url, params=params, data=img_data, headers=headers)
 
 
 # In[ ]:
