@@ -83,7 +83,7 @@ filepath = '{}/{}'.format(img_folder, file)
 
 
 # send to microsoft computer vision api to get text description
-msft_url = 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze'
+msft_url = 'https://westus.api.cognitive.microsoft.com/vision/v1.0/analyze'
 params = {'visualFeatures' : 'Description',
           'language' : 'en'}
 headers = {'Content-Type' : 'application/octet-stream',
