@@ -1,6 +1,7 @@
 # City description bot by Geoff Boeing http://geoffboeing.com/
 # Uses microsoft's cognitive vision api: https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/
 # To describe popular photos of cities from reddit: https://www.reddit.com/r/cityporn/top
+# uses the python-twitter package: pip install python-twitter
 
 
 import json

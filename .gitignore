@@ -1,6 +1,7 @@
 keys.py
 create_delay.py
 *.sh
+*.bat
 *.tmp
 *.jpg
 *.png
