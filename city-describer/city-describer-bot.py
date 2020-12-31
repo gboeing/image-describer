@@ -120,7 +120,7 @@ def geocode(query):
 
 # parse an image title into a geocodable query
 def parse_title(title):
-    
+
     query = title.lower()
 
     if '[' in query:
@@ -129,14 +129,14 @@ def parse_title(title):
         query = query.split('(')[0].strip()
     if ' in ' in query:
         query = query.split(' in ')[1].strip()
-    
+
     query = query.replace('|', ' ').replace('-', ' ').replace('  ', ' ').replace('  ', ' ').strip(' ,.')
     return query
 
 
 # turn an image title into location info
 def get_location(img_title):
-    
+
     query = parse_title(img_title)
     data = geocode(query)
     if len(data['results']) > 0:
@@ -165,6 +165,12 @@ def run(attempt=0, download=download, max_dimensions=max_dimensions, img_title=N
             # else, just use an existing temp image
             img_url = ''
             img_filepath = 'img_temp.jpg'
+            try:
+                # try to read a place name from img_title.txt file
+                with open('img_title.txt','r') as f:
+                    img_title = f.read()
+            except:
+                img_title = None
 
 
         # upload image to microsoft computer vision api to get text description
@@ -202,23 +208,23 @@ def run(attempt=0, download=download, max_dimensions=max_dimensions, img_title=N
         user = api.VerifyCredentials().AsDict()
         print('logged into twitter as "{}" id={}'.format(user['screen_name'], user['id']))
 
-        
+
         if tweet:
             # tweet image and its text description
             if lat is None or lng is None:
                 result = api.PostUpdate(status=description, media=img_filepath)
             else:
                 result = api.PostUpdate(status=description, media=img_filepath, latitude=lat, longitude=lng, display_coordinates=True)
-            
+
             print(result.created_at, result.text)
 
 
     except Exception as e:
-        
+
         print('error:', e)
 
         if attempt < max_retries:
-            
+
             # on even numbered attempts, try re-sizing image
             if (attempt + 1) % 2 == 0:
 
